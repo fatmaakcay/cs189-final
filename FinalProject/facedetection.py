@@ -109,8 +109,6 @@ class FaceDetection():
         for (x, y, w, h) in faces:
             cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
-        # cv2.imshow('Video',image)
-        # cv2.waitKey(5)
     def waitforInput(self, timeout):
         i, o, e = select.select([sys.stdin], [], [], timeout)
         
@@ -184,19 +182,6 @@ class FaceDetection():
             os.system("say " + random.choice(promotion))
             time.sleep(4.0)
 
-    def processImage(self, data):
-        try: 
-            img = self.bridge.imgmsg_to_cv2(data, 'bgr8')
-            blur_img = cv2.medianBlur(img, 5)
-
-            rows = len(img) #480
-            cols = len(img[0]) #640
-            cv2.imshow('Cube Detect', img)
-            # cv2.waitKey(3)
-
-        except CvBridgeError, e: 
-            rospy.loginfo(e)
-
     # obstacle avoidance from last pset
     def processDepthImage(self, data):
         global obstacle, left_obstacle, right_obstacle
@@ -230,8 +215,6 @@ class FaceDetection():
                 left_obstacle = False
                 right_obstacle = False
 
-            # cv2.imshow('Depth Image', depth_array)
-            cv2.waitKey(3)
 
         except CvBridgeError, e: 
             rospy.loginfo(e)
