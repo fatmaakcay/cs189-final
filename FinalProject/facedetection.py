@@ -131,7 +131,7 @@ class FaceDetection():
             
             time.sleep(5.0)
 
-            timeout = 20.0
+            timeout = 5.0
 
             i = self.waitforInput(timeout)
             if i:
