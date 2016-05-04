@@ -4,6 +4,9 @@ except ImportError:
     import simplejson as json
 
 from twitter import Twitter, OAuth, TwitterHTTPError, TwitterStream
+import random
+
+phrases = ["They don't want you to win", "The key to success is good pictures", "Bless up", "Liooon", "They never said winning was easy"]
 
 # Variables that contains the user credentials to access Twitter API 
 ACCESS_TOKEN = '723567770995200000-qTCtogXKBsURHBzKRMOtWsTpazbJ8k2'
@@ -31,7 +34,7 @@ def post_twitter(file_name):
 
 	# Or send a tweet with an image (or set a logo/banner similarily)
 	# using the old deprecated method that will probably disappear some day
-	params = {"media[]": imagedata, "status": "This is my first photo post!!"}
+	params = {"media[]": imagedata, "status": random.choice(phrases)}
 
 	t.statuses.update_with_media(**params)
 

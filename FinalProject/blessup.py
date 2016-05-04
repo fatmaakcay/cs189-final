@@ -29,9 +29,7 @@ import sys, select
 import os 
 
 from play_sound import play_sound
-from twitter_streaming import post_twitter
-
-#### TEXT TO SPEECH STUFFF ######
+from twitter_win import post_twitter
 
 lin_speed = 0.15 #m/s
 ROT_SPEED = math.radians(15)
@@ -51,19 +49,18 @@ introduce_yourself = False
 
 tookPicture = False
 move_on = False
-key_presses = 0
+count_down = 3
 
 num_faces = 0
 
 # PHRASES LIST (Group)
-group_phrases = ["Wow, what a photogenic group!", "These pictures are going up on my Twitter"]
-
-# PHRASES LIST (SINGLE)
-solo_phrases = ["You look great!", "Where are your friends?", "You are a beauty queen"]
+phrases = ["They dont want you to win", "The key to success is good pictures", "Bless up", "Lie auhn", "They never said winning was easy"]
 
 # Self promotion
-promotion = ["Make sure to follow me on Twitter at seas underscore photobot!", "Make sure to tell all your friends about PhotoBot", "IMMORTAL POWER"]
+promotion = ["We da best music", "The key to success is to follow me on Twitter", "The key to success is IMMORTAL POWER", "Some people cant handle winning, I can."]
 # random.choice(foo)
+
+sound_files = ["anotherone.wav", "inspire.wav", "jewlery.wav", "played.wav", "smart.wav"]
 
 """""""""""""Photography Stuff"""""""""
 
@@ -102,15 +99,15 @@ class FaceDetection():
         # add logic here to make sure not every face is detected 
         num_faces = len(faces) 
         if num_faces > 0:
-            faceDetected = True
+            for (x, y, w, h) in faces:
+                if x > 100 and x < 500 and y > 100 and y < 500:
+                    if w > 100 and h > 100:
+                        # at least one face detected meets these criteria
+                        faceDetected = True
         else:
             faceDetected = False
 
-        for (x, y, w, h) in faces:
-            cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
-        # cv2.imshow('Video',image)
-        # cv2.waitKey(5)
     def waitforInput(self, timeout):
         i, o, e = select.select([sys.stdin], [], [], timeout)
         
@@ -121,81 +118,87 @@ class FaceDetection():
         return False
 
     def introduceMyself(self):
-        global num_faces, introduced, move_on, wantPhoto, key_presses
+        global wantPhoto, introduced
+
+        wp = False
+        itr = False
 
         if not introduced:
-            if num_faces > 1:
-                os.system("say 'Hello, my name is PhotoBot! I would like to take a photo of the" + str(num_faces) + "of you. Please press a key.'")
-            else:
-                os.system("say 'Hello, my name is PhotoBot! Would you like a photo? Please press a key!'")
+            os.system("say 'Press enter to ride with me through the journey of more success.'")
             
-            time.sleep(5.0)
-
-            timeout = 20.0
+            timeout = 10.0
 
             i = self.waitforInput(timeout)
+
             if i:
                 rospy.loginfo(str(i))
-                os.system("say 'Photo time! Please take a prop from the basket'")
-                time.sleep(4.0)
-                os.system("say 'please stay still, three, two, one. Smile!'")
+                os.system("say ''")
+                os.system("say 'The key to success is great props, take a prop from the basket.'")
+                time.sleep(15.0)
+                os.system("say 'Are you ready?'")
                 time.sleep(4.0)
                 rospy.loginfo("should be done with count")
                 wantPhoto = True
-
             else:
                 rospy.loginfo(str(i))
-                os.system("say 'You did not press a key'")
-                time.sleep(5.0)
-                rospy.loginfo("maybe next time")
-                move_on = True
+                os.system("say 'The key is to press enter.")
+                play_sound('played.wav')
 
-        i, o, e = select.select([sys.stdin], [], [], 1.0)
         introduced = True
-            
+        # i, o, e = select.select([sys.stdin], [], [], 1.0)
+        
 
     def takePhoto(self, image):
-    	global tookPicture, move_on, num_faces, wantPhoto, introduced, faceDetected, introduce_yourself
+    	global tookPicture, move_on, num_faces, wantPhoto, introduced, faceDetected, introduce_yourself, count_down
 
         image = self.bridge.imgmsg_to_cv2(image, "bgr8")
 
         self.face_detect(image)
 
         if faceDetected and not introduced:
-            introduce_yourself = True
-            # self.introduceMyself()
+            wantPhoto, introduced = self.introduceMyself()
 
-        if faceDetected and wantPhoto and not tookPicture:
-            cv2.imwrite('test.png', image)
-            play_sound('camera_shutter.wav')
-            rospy.loginfo("Picture saved!")
-            post_twitter('test.png')
-            rospy.loginfo("Image posted to twitter")
-            tookPicture = True
-            time.sleep(1.0)
+        if not wantPhoto and introduced:
+            move_on = True
 
-            # if num_faces > 1:
-            #     os.system("say " + random.choice(group_phrases))
-            #     time.sleep(4.0)
-            # else:
-            #     os.system("say " + random.choice(solo_phrases))
-            #     time.sleep(4.0)
+        if faceDetected and introduced and wantPhoto and not tookPicture:
+            take_three = bool(random.getrandbits(1))
 
-            os.system("say " + random.choice(promotion))
-            time.sleep(4.0)
+            if take_three:
+                for x in xrange(count_down):
+                    if x == 2:
+                        cv2.imwrite("image" + str(x+1) + ".png")
+                        play_sound('camera_shutter.wav')
+                        post_twitter(take_three)
+                        rospy.loginfo("Image posted to twitter")
+                        os.system("say " + random.choice(phrases))
+                        os.system("say " + random.choice(promotion))
+                        tookPicture = True
+                    else:
+                        cv2.imwrite("image" + str(x+1) + ".png")
+                        play_sound('camera_shutter.wav')
+                        play_sound('anotherone.wav')
+                        time.sleep(2.0)
+            else:
+                l_img = image
+                x_offset=120
+                y_offset=175
 
-    def processImage(self, data):
-        try: 
-            img = self.bridge.imgmsg_to_cv2(data, 'bgr8')
-            blur_img = cv2.medianBlur(img, 5)
+                # import in the harvard logo
+                s_img = cv2.imread("SEASLogo1.png", -1)
 
-            rows = len(img) #480
-            cols = len(img[0]) #640
-            cv2.imshow('Cube Detect', img)
-            # cv2.waitKey(3)
+                for c in range(0,3):
+                    l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] = s_img[:,:,c] * (s_img[:,:,3]/255.0) +  l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] * (1.0 - s_img[:,:,3]/255.0)
 
-        except CvBridgeError, e: 
-            rospy.loginfo(e)
+                cv2.imwrite("new_photo.png", l_img)
+                play_sound('camera_shutter.wav')
+                post_twitter(take_three)
+                rospy.loginfo("Image posted to twitter")
+
+                os.system("say " + random.choice(phrases))
+                os.system("say " + random.choice(promotion))
+
+                tookPicture = True
 
     # obstacle avoidance from last pset
     def processDepthImage(self, data):
@@ -230,14 +233,11 @@ class FaceDetection():
                 left_obstacle = False
                 right_obstacle = False
 
-            # cv2.imshow('Depth Image', depth_array)
-            cv2.waitKey(3)
-
         except CvBridgeError, e: 
             rospy.loginfo(e)
 
     def __init__(self):
-        global bump, cliff, wheel_drop, faceDetected, count_down, move_on, obstacle, introduced, wantPhoto, introduce_yourself, tookPicture
+        global bump, cliff, wheel_drop, faceDetected, move_on, obstacle, introduced, wantPhoto, introduce_yourself, tookPicture
           
 
         rospy.init_node('FaceDetection', anonymous=False)
@@ -262,8 +262,6 @@ class FaceDetection():
         rospy.Subscriber('mobile_base/events/cliff', CliffEvent, self.processCliffSensing)
         self.sound = rospy.Publisher('/mobile_base/commands/sound', Sound, queue_size=1)
         # Use a CvBridge to convert ROS image type to CV Image (Mat)
-        
-        
 
         # Generate a 'left' twist object.
         turn_left = Twist()
@@ -272,10 +270,6 @@ class FaceDetection():
         
         # Twist is a datatype for velocity
         move_cmd = Twist()
-
-        # Use a CvBridge to convert ROS image type to CV Image (Mat)
-        
-        # Subscribe to depth topic 
 
         while not rospy.is_shutdown(): 
             if bump:
@@ -292,50 +286,34 @@ class FaceDetection():
                     rospy.loginfo("should turn") 
                     r.sleep()  
                 bump = False
+
             if wheel_drop or cliff:
                 move_cmd.angular.z = 0
                 move_cmd.linear.x = 0
                 rospy.loginfo("cliff or wheel")
-                # rospy.loginfo(obstacle)
                 rospy.sleep(10)
+
             if faceDetected or (faceDetected and obstacle):
-                # stop moving when face is detected but photo hasn't been taken
-                rospy.loginfo("face detected!")
                 move_cmd.linear.x = 0
                 move_cmd.angular.z = 0
                 self.cmd_vel.publish(move_cmd) 
                 r.sleep()
 
-                # if obstacle:
-                #     os.system("say 'You are standing pretty close, please take a step back'")
-                #     time.sleep(4.0)
-
-                if introduce_yourself:
-                    self.introduceMyself()
-                    time.sleep(10.0)
-                    rospy.loginfo("took pic boolean " + str(tookPicture))
-                    rospy.loginfo("took pic boolean " + str(move_on))
-
-                    if tookPicture:
-                        os.system("say 'Okay, I have to take pictures of other people now, Thank you'")
-                        time.sleep(4.0)
-                        rospy.loginfo("moving on now")
-                        for x in xrange(0,10): 
-                            rospy.loginfo("turning in face detected")
-                            move_cmd.angular.z = math.radians(45)
-                            self.cmd_vel.publish(move_cmd) 
-                            r.sleep()
-                    if move_on:
-                        os.system("say 'sorry to bother you'")
-                        time.sleep(4.0)
-                        rospy.loginfo("moving on now")
-                        for x in xrange(0,10): 
-                            rospy.loginfo("turning in face detected")
-                            move_cmd.angular.z = math.radians(45)
-                            self.cmd_vel.publish(move_cmd) 
-                            r.sleep()
-
-                time.sleep(2.0)
+                if tookPicture:
+                    os.system("say 'The key to success is to take photos of more people, bye.'")
+                    rospy.loginfo("moving on now")
+                    for x in xrange(0,30): 
+                        rospy.loginfo("turning in face detected")
+                        move_cmd.angular.z = math.radians(45)
+                        self.cmd_vel.publish(move_cmd) 
+                        r.sleep()
+                if move_on:
+                    os.system("say 'The key to success is to find people to take photos of.'")
+                    for x in xrange(0,30): 
+                        rospy.loginfo("turning in face detected")
+                        move_cmd.angular.z = math.radians(45)
+                        self.cmd_vel.publish(move_cmd) 
+                        r.sleep()
 
                 move_on = False
                 wantPhoto = False
@@ -343,8 +321,6 @@ class FaceDetection():
                 introduced = False
                 introduce_yourself = False
                 faceDetected = False
-                obstacle = False
-
             elif obstacle:
                 while obstacle: 
                     move_cmd.linear.x = 0
@@ -369,15 +345,8 @@ class FaceDetection():
                 move_cmd.linear.x = lin_speed
                 move_cmd.angular.z = 0
                 self.cmd_vel.publish(move_cmd) 
-                # self.sound.publish(Sound.ON)
                 r.sleep() 
-                # rospy.loginfo("should be turning in normal state")
-                # turn_left.angular.z = ROT_SPEED
-                # self.cmd_vel.publish(turn_left)
-                # r.sleep()   
-
-
-        
+          
     def shutdown(self):
         cv2.destroyAllWindows()
         rospy.loginfo("Stop")
