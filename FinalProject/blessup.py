@@ -60,7 +60,7 @@ phrases = ["They dont want you to win", "The key to success is good pictures", "
 promotion = ["We da best music", "The key to success is to follow me on Twitter", "The key to success is IMMORTAL POWER", "Some people cant handle winning, I can."]
 # random.choice(foo)
 
-sound_files = ["anotherone.wav", "inspire.wav", "jewlery.wav", "played.wav", "smart.wav"]
+sound_files = ["sounds/inspire.wav", "sounds/jewlery.wav", "sounds/smart.wav"]
 
 """""""""""""Photography Stuff"""""""""
 
@@ -134,15 +134,15 @@ class FaceDetection():
                 rospy.loginfo(str(i))
                 os.system("say ''")
                 os.system("say 'The key to success is great props, take a prop from the basket.'")
-                time.sleep(15.0)
+                time.sleep(10.0)
                 os.system("say 'Are you ready?'")
-                time.sleep(4.0)
-                rospy.loginfo("should be done with count")
+                os.system("say 'three, two, one, bless up'")
                 wantPhoto = True
             else:
                 rospy.loginfo(str(i))
                 os.system("say 'The key is to press enter.")
-                play_sound('played.wav')
+                play_sound('sounds/played.wav')
+                wantPhoto = False
 
         introduced = True
         # i, o, e = select.select([sys.stdin], [], [], 1.0)
@@ -168,7 +168,7 @@ class FaceDetection():
                 for x in xrange(count_down):
                     if x == 2:
                         cv2.imwrite("image" + str(x+1) + ".png")
-                        play_sound('camera_shutter.wav')
+                        play_sound('sounds/camera_shutter.wav')
                         post_twitter(take_three)
                         rospy.loginfo("Image posted to twitter")
                         os.system("say " + random.choice(phrases))
@@ -176,8 +176,8 @@ class FaceDetection():
                         tookPicture = True
                     else:
                         cv2.imwrite("image" + str(x+1) + ".png")
-                        play_sound('camera_shutter.wav')
-                        play_sound('anotherone.wav')
+                        play_sound('sounds/camera_shutter.wav')
+                        play_sound('sounds/anotherone.wav')
                         time.sleep(2.0)
             else:
                 l_img = image
@@ -191,7 +191,7 @@ class FaceDetection():
                     l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] = s_img[:,:,c] * (s_img[:,:,3]/255.0) +  l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] * (1.0 - s_img[:,:,3]/255.0)
 
                 cv2.imwrite("new_photo.png", l_img)
-                play_sound('camera_shutter.wav')
+                play_sound('sounds/camera_shutter.wav')
                 post_twitter(take_three)
                 rospy.loginfo("Image posted to twitter")
 

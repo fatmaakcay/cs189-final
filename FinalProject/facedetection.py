@@ -167,7 +167,7 @@ class FaceDetection():
 
         if faceDetected and wantPhoto and not tookPicture:
             cv2.imwrite('test.png', image)
-            play_sound('camera_shutter.wav')
+            play_sound('sounds/camera_shutter.wav')
             rospy.loginfo("Picture saved!")
             post_twitter('test.png')
             rospy.loginfo("Image posted to twitter")
