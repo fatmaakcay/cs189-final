@@ -123,8 +123,10 @@ class FaceDetection():
 
         if not introduced:
             if num_faces > 1:
+                rospy.loginfo("speaking")
                 os.system("say 'Hello, my name is PhotoBot! I would like to take a photo of the" + str(num_faces) + "of you. Please press a key.'")
             else:
+                rospy.loginfo("speaking")
                 os.system("say 'Hello, my name is PhotoBot! Would you like a photo? Please press a key!'")
             
             time.sleep(5.0)
@@ -134,6 +136,7 @@ class FaceDetection():
             i = self.waitforInput(timeout)
             if i:
                 rospy.loginfo(str(i))
+                rospy.loginfo("speaking")
                 os.system("say 'Photo time! Please take a prop from the basket'")
                 time.sleep(4.0)
                 os.system("say 'please stay still, three, two, one. Smile!'")
@@ -143,6 +146,7 @@ class FaceDetection():
 
             else:
                 rospy.loginfo(str(i))
+                rospy.loginfo("speaking")
                 os.system("say 'You did not press a key'")
                 time.sleep(5.0)
                 rospy.loginfo("maybe next time")
@@ -169,7 +173,6 @@ class FaceDetection():
             rospy.loginfo("Picture saved!")
             post_twitter('test.png')
             rospy.loginfo("Image posted to twitter")
-            tookPicture = True
             time.sleep(1.0)
 
             # if num_faces > 1:
@@ -178,9 +181,10 @@ class FaceDetection():
             # else:
             #     os.system("say " + random.choice(solo_phrases))
             #     time.sleep(4.0)
-
+            rospy.loginfo("speaking")
             os.system("say " + random.choice(promotion))
-            time.sleep(4.0)
+
+            tookPicture = True
 
     # obstacle avoidance from last pset
     def processDepthImage(self, data):
@@ -300,6 +304,7 @@ class FaceDetection():
                     rospy.loginfo("took pic boolean " + str(move_on))
 
                     if tookPicture:
+                        rospy.loginfo("speaking")
                         os.system("say 'Okay, I have to take pictures of other people now, Thank you'")
                         time.sleep(4.0)
                         rospy.loginfo("moving on now")
@@ -309,6 +314,7 @@ class FaceDetection():
                             self.cmd_vel.publish(move_cmd) 
                             r.sleep()
                     if move_on:
+                        rospy.loginfo("speaking")
                         os.system("say 'sorry to bother you'")
                         time.sleep(4.0)
                         rospy.loginfo("moving on now")
