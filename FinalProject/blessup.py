@@ -99,11 +99,7 @@ class FaceDetection():
         # add logic here to make sure not every face is detected 
         num_faces = len(faces) 
         if num_faces > 0:
-            for (x, y, w, h) in faces:
-                if x > 100 and x < 500 and y > 100 and y < 500:
-                    if w > 100 and h > 100:
-                        # at least one face detected meets these criteria
-                        faceDetected = True
+            faceDetected = True
         else:
             faceDetected = False
 

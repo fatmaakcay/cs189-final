@@ -123,10 +123,10 @@ class FaceDetection():
 
         if not introduced:
             if num_faces > 1:
-                rospy.loginfo("speaking")
+                rospy.loginfo("Hello, my name is PhotoBot! I would like to take a photo of the" + str(num_faces) + "of you. Please press a key.'")
                 os.system("say 'Hello, my name is PhotoBot! I would like to take a photo of the" + str(num_faces) + "of you. Please press a key.'")
             else:
-                rospy.loginfo("speaking")
+                rospy.loginfo("Hello, my name is PhotoBot! Would you like a photo? Please press a key!'")
                 os.system("say 'Hello, my name is PhotoBot! Would you like a photo? Please press a key!'")
             
             time.sleep(5.0)
@@ -136,7 +136,7 @@ class FaceDetection():
             i = self.waitforInput(timeout)
             if i:
                 rospy.loginfo(str(i))
-                rospy.loginfo("speaking")
+                rospy.loginfo("Photo time! Please take a prop from the basket'")
                 os.system("say 'Photo time! Please take a prop from the basket'")
                 time.sleep(4.0)
                 os.system("say 'please stay still, three, two, one. Smile!'")
@@ -168,10 +168,20 @@ class FaceDetection():
             # self.introduceMyself()
 
         if faceDetected and wantPhoto and not tookPicture:
-            cv2.imwrite('test.png', image)
+            l_img = image
+            x_offset=120
+            y_offset=175
+
+            # import in the harvard logo
+            s_img = cv2.imread("SEASLogo1.png", -1)
+
+            for c in range(0,3):
+                l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] = s_img[:,:,c] * (s_img[:,:,3]/255.0) +  l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] * (1.0 - s_img[:,:,3]/255.0)
+
+            cv2.imwrite("new_photo.png", l_img)
             play_sound('sounds/camera_shutter.wav')
             rospy.loginfo("Picture saved!")
-            post_twitter('test.png')
+            post_twitter('new_photo.png')
             rospy.loginfo("Image posted to twitter")
             time.sleep(1.0)
 
