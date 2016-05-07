@@ -122,6 +122,8 @@ class FaceDetection():
     def introduceMyself(self):
         global wantPhoto, introduced
 
+        rospy.loginfo("should introduce")
+
         wp = False
         itr = False
 
@@ -297,6 +299,7 @@ class FaceDetection():
 
             if faceDetected or (faceDetected and obstacle):
                 rospy.loginfo("DETECTED FACE")
+                obstacle = False
                 move_cmd.linear.x = 0
                 move_cmd.angular.z = 0
                 self.cmd_vel.publish(move_cmd) 
@@ -327,23 +330,21 @@ class FaceDetection():
             elif obstacle:
                 # while obstacle: 
                 move_cmd.linear.x = 0
+                rospy.loginfo("obstacle")
                 if not left_obstacle:
                     for x in xrange(0,30):
                         turn_left.angular.z = math.radians(0) 
                         self.cmd_vel.publish(turn_left)
-                        rospy.loginfo("obstacle, turn left")
                         r.sleep()
                 elif not right_obstacle:
                     for x in xrange(0,30):
                         turn_left.angular.z = -math.radians(0)
                         self.cmd_vel.publish(turn_left)
-                        rospy.loginfo("obstacle, turn right")
                         r.sleep()
                 else:
                     for x in xrange(0,30):
                         turn_left.angular.z = math.radians(0)
                         self.cmd_vel.publish(turn_left)
-                        rospy.loginfo("detected on both sides")
                         r.sleep()    
             else: 
             	# navigate the room normally otherwise
