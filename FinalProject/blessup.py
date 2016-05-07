@@ -320,6 +320,7 @@ class FaceDetection():
                 r.sleep()
 
                 if introduce_yourself:
+                    rospy.loginfo("should be introducing")
                     wantPhoto, introduced = self.introduceMyself()
 
                 if not wantPhoto and introduced:
