@@ -103,6 +103,12 @@ class FaceDetection():
         else:
             faceDetected = False
 
+        for (x, y, w, h) in faces:
+            cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+        cv2.imshow('Video',image)
+        cv2.waitKey(5)
+
 
     def waitforInput(self, timeout):
         i, o, e = select.select([sys.stdin], [], [], timeout)
