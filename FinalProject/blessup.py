@@ -296,6 +296,7 @@ class FaceDetection():
                 rospy.sleep(10)
 
             if faceDetected or (faceDetected and obstacle):
+                rospy.loginfo("DETECTED FACE")
                 move_cmd.linear.x = 0
                 move_cmd.angular.z = 0
                 self.cmd_vel.publish(move_cmd) 
@@ -324,19 +325,22 @@ class FaceDetection():
                 introduce_yourself = False
                 faceDetected = False
             elif obstacle:
-                while obstacle: 
-                    move_cmd.linear.x = 0
-                    if not left_obstacle:
+                # while obstacle: 
+                move_cmd.linear.x = 0
+                if not left_obstacle:
+                    for x in xrange(0,30):
                         turn_left.angular.z = math.radians(0) 
                         self.cmd_vel.publish(turn_left)
                         rospy.loginfo("obstacle, turn left")
                         r.sleep()
-                    elif not right_obstacle:
+                elif not right_obstacle:
+                    for x in xrange(0,30):
                         turn_left.angular.z = -math.radians(0)
                         self.cmd_vel.publish(turn_left)
                         rospy.loginfo("obstacle, turn right")
                         r.sleep()
-                    else:
+                else:
+                    for x in xrange(0,30):
                         turn_left.angular.z = math.radians(0)
                         self.cmd_vel.publish(turn_left)
                         rospy.loginfo("detected on both sides")
