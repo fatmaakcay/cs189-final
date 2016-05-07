@@ -316,7 +316,7 @@ class FaceDetection():
                 if move_on:
                     os.system("say 'The key to success is to find people to take photos of.'")
                     for x in xrange(0,30): 
-                        rospy.loginfo("turning in face detected")
+                        rospy.loginfo("moving on")
                         move_cmd.angular.z = math.radians(0)
                         self.cmd_vel.publish(move_cmd) 
                         r.sleep()
