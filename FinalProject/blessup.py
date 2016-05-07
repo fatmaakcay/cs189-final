@@ -346,10 +346,11 @@ class FaceDetection():
                                 self.cmd_vel.publish(move_cmd) 
                                 r.sleep()
                     
-                tookPicture = False
-                introduced = False
-                introduce_yourself = False
-                faceDetected = False
+                    tookPicture = False
+                    introduced = False
+                    introduce_yourself = False
+                    faceDetected = False
+
             elif obstacle:
                 rospy.loginfo("obstacle")
                 # while obstacle: 
