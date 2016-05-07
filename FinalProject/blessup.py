@@ -121,6 +121,7 @@ class FaceDetection():
         return False
 
     def introduceMyself(self):
+        global introduced
         rospy.loginfo("should start introduce")
 
         wp = False
@@ -150,7 +151,7 @@ class FaceDetection():
                 wantPhoto = False
 
         introduced = True
-        return (wantPhoto, introduced)
+        return (wantPhoto, True)
         # i, o, e = select.select([sys.stdin], [], [], 1.0)
         
     def takePhoto(self, image):
