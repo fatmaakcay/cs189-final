@@ -50,6 +50,7 @@ introduce_yourself = False
 tookPicture = False
 move_on = False
 count_down = 3
+g_img = None
 
 num_faces = 0
 
@@ -138,7 +139,7 @@ class FaceDetection():
                 rospy.loginfo(str(i))
                 os.system("say ''")
                 os.system("say 'The key to success is great props, take a prop from the basket.'")
-                time.sleep(10.0)
+                # time.sleep(10.0)
                 os.system("say 'Are you ready?'")
                 os.system("say 'three, two, one, bless up'")
                 wantPhoto = True
@@ -149,42 +150,55 @@ class FaceDetection():
                 wantPhoto = False
 
         introduced = True
+        return (wantPhoto, introduced)
         # i, o, e = select.select([sys.stdin], [], [], 1.0)
         
-
     def takePhoto(self, image):
-    	global tookPicture, move_on, num_faces, wantPhoto, introduced, faceDetected, introduce_yourself, count_down
+    	global tookPicture, move_on, num_faces, wantPhoto, introduced, faceDetected, introduce_yourself, count_down, g_img
 
         image = self.bridge.imgmsg_to_cv2(image, "bgr8")
+
+        g_img = image
 
         self.face_detect(image)
 
         if faceDetected and not introduced:
-            wantPhoto, introduced = self.introduceMyself()
+            introduce_yourself = True
 
-        if not wantPhoto and introduced:
-            move_on = True
+    def takePicture(self, image):
+        global tookPicture, wantPhoto, introduced, faceDetected, count_down, g_img
 
         if faceDetected and introduced and wantPhoto and not tookPicture:
-            take_three = bool(random.getrandbits(1))
+            # take_three = bool(random.getrandbits(1))
 
-            if take_three:
-                for x in xrange(count_down):
-                    if x == 2:
-                        cv2.imwrite("image" + str(x+1) + ".png")
-                        play_sound('sounds/camera_shutter.wav')
-                        post_twitter(take_three)
-                        rospy.loginfo("Image posted to twitter")
-                        os.system("say " + random.choice(phrases))
-                        os.system("say " + random.choice(promotion))
-                        tookPicture = True
-                    else:
-                        cv2.imwrite("image" + str(x+1) + ".png")
-                        play_sound('sounds/camera_shutter.wav')
-                        play_sound('sounds/anotherone.wav')
-                        time.sleep(2.0)
-            else:
-                l_img = image
+            # if take_three:
+            #     rospy.loginfo("gonna take 3 pics")
+            #     for x in xrange(count_down):
+            #         if x == 2:
+            #             cv2.imwrite("image" + str(x+1) + ".png", l_img)
+            #             play_sound('sounds/camera_shutter.wav')
+            #             post_twitter(take_three)
+            #             rospy.loginfo("Image posted to twitter")
+            #             os.system("say " + random.choice(phrases))
+            #             os.system("say " + random.choice(promotion))
+            #             tookPicture = True
+            #         else:
+            #             l_img = g_img
+            #             x_offset=120
+            #             y_offset=175
+
+            #             # import in the harvard logo
+            #             s_img = cv2.imread("SEASLogo1.png", -1)
+
+            #             for c in range(0,3):
+            #                 l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] = s_img[:,:,c] * (s_img[:,:,3]/255.0) +  l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] * (1.0 - s_img[:,:,3]/255.0)
+                        
+            #             cv2.imwrite("image" + str(x+1) + ".png", l_img)
+            #             play_sound('sounds/camera_shutter.wav')
+            #             play_sound('sounds/anotherone.wav')
+            #             # time.sleep(2.0)
+            # else:
+                l_img = g_img
                 x_offset=120
                 y_offset=175
 
@@ -202,7 +216,8 @@ class FaceDetection():
                 os.system("say " + random.choice(phrases))
                 os.system("say " + random.choice(promotion))
 
-                tookPicture = True
+        tookPicture = True
+        return tookPicture
 
     # obstacle avoidance from last pset
     def processDepthImage(self, data):
@@ -241,7 +256,7 @@ class FaceDetection():
             rospy.loginfo(e)
 
     def __init__(self):
-        global bump, cliff, wheel_drop, faceDetected, move_on, obstacle, introduced, wantPhoto, introduce_yourself, tookPicture
+        global bump, cliff, wheel_drop, faceDetected, move_on, obstacle, introduced, wantPhoto, introduce_yourself, tookPicture, g_img
           
 
         rospy.init_node('FaceDetection', anonymous=False)
@@ -304,6 +319,16 @@ class FaceDetection():
                 move_cmd.angular.z = 0
                 self.cmd_vel.publish(move_cmd) 
                 r.sleep()
+
+                if introduce_yourself:
+                    wantPhoto, introduced = self.introduceMyself()
+
+                if not wantPhoto and introduced:
+                    move_on = True
+
+                if wantPhoto:
+                    rospy.loginfo("taking photo in if face detected")
+                    tookPicture = self.takePicture(g_img)
 
                 if tookPicture:
                     os.system("say 'The key to success is to take photos of more people, bye.'")
