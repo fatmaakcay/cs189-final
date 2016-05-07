@@ -121,8 +121,6 @@ class FaceDetection():
         return False
 
     def introduceMyself(self):
-        global wantPhoto, introduced
-
         rospy.loginfo("should start introduce")
 
         wp = False
