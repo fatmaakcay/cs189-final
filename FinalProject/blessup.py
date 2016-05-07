@@ -314,7 +314,6 @@ class FaceDetection():
 
             if faceDetected or (faceDetected and obstacle):
                 rospy.loginfo("DETECTED FACE")
-                obstacle = False
                 move_cmd.linear.x = 0
                 move_cmd.angular.z = 0
                 self.cmd_vel.publish(move_cmd) 
@@ -353,24 +352,24 @@ class FaceDetection():
                 introduce_yourself = False
                 faceDetected = False
             elif obstacle:
-                # while obstacle: 
-                move_cmd.linear.x = 0
                 rospy.loginfo("obstacle")
-                if not left_obstacle:
-                    for x in xrange(0,30):
-                        turn_left.angular.z = math.radians(0) 
-                        self.cmd_vel.publish(turn_left)
-                        r.sleep()
-                elif not right_obstacle:
-                    for x in xrange(0,30):
-                        turn_left.angular.z = -math.radians(0)
-                        self.cmd_vel.publish(turn_left)
-                        r.sleep()
-                else:
-                    for x in xrange(0,30):
-                        turn_left.angular.z = math.radians(0)
-                        self.cmd_vel.publish(turn_left)
-                        r.sleep()    
+                # while obstacle: 
+                #     move_cmd.linear.x = 0
+                #     if not left_obstacle:
+                #         turn_left.angular.z = math.radians(45) 
+                #         self.cmd_vel.publish(turn_left)
+                #         rospy.loginfo("obstacle, turn left")
+                #         r.sleep()
+                #     elif not right_obstacle:
+                #         turn_left.angular.z = -math.radians(45)
+                #         self.cmd_vel.publish(turn_left)
+                #         rospy.loginfo("obstacle, turn right")
+                #         r.sleep()
+                #     else:
+                #         turn_left.angular.z = math.radians(45)
+                #         self.cmd_vel.publish(turn_left)
+                #         rospy.loginfo("detected on both sides")
+                #         r.sleep()     
             else: 
             	# navigate the room normally otherwise
                 rospy.loginfo("moving forward bc no obstacle")
