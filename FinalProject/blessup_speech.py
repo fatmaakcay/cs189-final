@@ -144,7 +144,7 @@ class FaceDetection():
                     value = r.recognize_google(audio)
                     rospy.loginfo("The user said " + str(value))
 
-                    if value.contains("yes")
+                    if value.find("yes") != -1:
                         return True
 
                     elif value == "yes" or value == "sure" or value == "yay":
