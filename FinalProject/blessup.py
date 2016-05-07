@@ -130,6 +130,7 @@ class FaceDetection():
 
         if not introduced:
             os.system("say 'Press enter to ride with me through the journey of more success.'")
+            time.sleep(10.0)
             
             timeout = 10.0
 
@@ -139,9 +140,10 @@ class FaceDetection():
                 rospy.loginfo(str(i))
                 os.system("say ''")
                 os.system("say 'The key to success is great props, take a prop from the basket.'")
-                # time.sleep(10.0)
+                time.sleep(10.0)
                 os.system("say 'Are you ready?'")
                 os.system("say 'three, two, one, bless up'")
+                time.sleep(5.0)
                 wantPhoto = True
             else:
                 rospy.loginfo(str(i))
