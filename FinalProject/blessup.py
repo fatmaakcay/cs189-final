@@ -31,8 +31,8 @@ import os
 from play_sound import play_sound
 from twitter_win import post_twitter
 
-lin_speed = 0.15 #m/s
-ROT_SPEED = math.radians(15)
+lin_speed = 0.00 #m/s
+ROT_SPEED = math.radians(0)
 turn_d = 1
 bump = False
 obstacle = False 
@@ -306,14 +306,14 @@ class FaceDetection():
                     rospy.loginfo("moving on now")
                     for x in xrange(0,30): 
                         rospy.loginfo("turning in face detected")
-                        move_cmd.angular.z = math.radians(45)
+                        move_cmd.angular.z = math.radians(0)
                         self.cmd_vel.publish(move_cmd) 
                         r.sleep()
                 if move_on:
                     os.system("say 'The key to success is to find people to take photos of.'")
                     for x in xrange(0,30): 
                         rospy.loginfo("turning in face detected")
-                        move_cmd.angular.z = math.radians(45)
+                        move_cmd.angular.z = math.radians(0)
                         self.cmd_vel.publish(move_cmd) 
                         r.sleep()
 
@@ -327,17 +327,17 @@ class FaceDetection():
                 while obstacle: 
                     move_cmd.linear.x = 0
                     if not left_obstacle:
-                        turn_left.angular.z = math.radians(45) 
+                        turn_left.angular.z = math.radians(0) 
                         self.cmd_vel.publish(turn_left)
                         rospy.loginfo("obstacle, turn left")
                         r.sleep()
                     elif not right_obstacle:
-                        turn_left.angular.z = -math.radians(45)
+                        turn_left.angular.z = -math.radians(0)
                         self.cmd_vel.publish(turn_left)
                         rospy.loginfo("obstacle, turn right")
                         r.sleep()
                     else:
-                        turn_left.angular.z = math.radians(45)
+                        turn_left.angular.z = math.radians(0)
                         self.cmd_vel.publish(turn_left)
                         rospy.loginfo("detected on both sides")
                         r.sleep()    
