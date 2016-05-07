@@ -33,7 +33,8 @@ from twitter_win import post_twitter
 
 import speech_recognition as sr
 
-lin_speed = 0.15 #m/s
+# lin_speed = 0.15 #m/s
+lin_speed = 0
 ROT_SPEED = math.radians(45)
 turn_d = 1
 bump = False
@@ -157,7 +158,7 @@ class FaceDetection():
 
                 except sr.RequestError as e:
                     rospy.loginfo("Google Speech errors!")
-                    
+
         except KeyboardInterrupt:
             pass
 
