@@ -164,6 +164,7 @@ class FaceDetection():
 
         if faceDetected and not introduced:
             introduce_yourself = True
+            rospy.loginfo("should set introduce_yourself to True")
 
     def takePicture(self, image):
         global tookPicture, wantPhoto, introduced, faceDetected, count_down, g_img
@@ -351,7 +352,7 @@ class FaceDetection():
                 tookPicture = False
                 introduced = False
                 introduce_yourself = False
-                faceDetected = False
+                # faceDetected = False
             elif obstacle:
                 rospy.loginfo("obstacle")
                 # while obstacle: 
