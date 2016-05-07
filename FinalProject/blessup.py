@@ -255,7 +255,7 @@ class FaceDetection():
             rospy.loginfo(e)
 
     def __init__(self):
-        global bump, cliff, wheel_drop, faceDetected, move_on, obstacle, introduced, introduce_yourself, tookPicture, g_img
+        global bump, cliff, wheel_drop, faceDetected, obstacle, introduced, introduce_yourself, tookPicture, g_img
           
 
         rospy.init_node('FaceDetection', anonymous=False)
@@ -322,35 +322,34 @@ class FaceDetection():
                     rospy.loginfo("should be introducing")
                     wantPhoto, introduced = self.introduceMyself()
 
-                if not wantPhoto and introduced:
-                    move_on = True
+                    if not wantPhoto and introduced:
+                        move_on = True
 
-                if wantPhoto:
-                    rospy.loginfo("taking photo in if face detected")
-                    tookPicture = self.takePicture(g_img)
+                        if move_on:
+                            os.system("say 'The key to success is to find people to take photos of.'")
+                            for x in xrange(0,30): 
+                                rospy.loginfo("moving on")
+                                move_cmd.angular.z = math.radians(0)
+                                self.cmd_vel.publish(move_cmd) 
+                                r.sleep()
 
-                if tookPicture:
-                    os.system("say 'The key to success is to take photos of more people, bye.'")
-                    rospy.loginfo("moving on now")
-                    for x in xrange(0,30): 
-                        rospy.loginfo("turning in face detected")
-                        move_cmd.angular.z = math.radians(0)
-                        self.cmd_vel.publish(move_cmd) 
-                        r.sleep()
-                if move_on:
-                    os.system("say 'The key to success is to find people to take photos of.'")
-                    for x in xrange(0,30): 
-                        rospy.loginfo("moving on")
-                        move_cmd.angular.z = math.radians(0)
-                        self.cmd_vel.publish(move_cmd) 
-                        r.sleep()
+                    if wantPhoto:
+                        rospy.loginfo("taking photo in if face detected")
+                        tookPicture = self.takePicture(g_img)
 
-                move_on = False
-                wantPhoto = False
+                        if tookPicture:
+                            os.system("say 'The key to success is to take photos of more people, bye.'")
+                            rospy.loginfo("moving on now")
+                            for x in xrange(0,30): 
+                                rospy.loginfo("turning in face detected")
+                                move_cmd.angular.z = math.radians(0)
+                                self.cmd_vel.publish(move_cmd) 
+                                r.sleep()
+                    
                 tookPicture = False
                 introduced = False
                 introduce_yourself = False
-                # faceDetected = False
+                faceDetected = False
             elif obstacle:
                 rospy.loginfo("obstacle")
                 # while obstacle: 
