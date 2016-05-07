@@ -123,7 +123,7 @@ class FaceDetection():
     def introduceMyself(self):
         global wantPhoto, introduced
 
-        rospy.loginfo("should introduce")
+        rospy.loginfo("should start introduce")
 
         wp = False
         itr = False
