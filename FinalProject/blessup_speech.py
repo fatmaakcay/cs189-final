@@ -142,9 +142,12 @@ class FaceDetection():
                 try:
                     # recognize speech using Google Speech Recognition
                     value = r.recognize_google(audio)
-                    rospy.loginfo("The user said" + str(value))
+                    rospy.loginfo("The user said " + str(value))
 
-                    if value == "yes" or value == "sure" or value == "yay":
+                    if value.contains("yes")
+                        return True
+
+                    elif value == "yes" or value == "sure" or value == "yay":
                         rospy.loginfo("The user wants a photo")
                         return True 
 
@@ -171,7 +174,7 @@ class FaceDetection():
 
         if not introduced:
             introduced = True
-            os.system("say 'Press enter to ride with me through the journey of more success.'")
+            os.system("say 'Hey! I am PhotoBot. Do you want a photo?'")
             time.sleep(10.0)
             
             timeout = 10.0
@@ -182,6 +185,7 @@ class FaceDetection():
             if i:
                 rospy.loginfo(str(i))
                 os.system("say ''")
+                os.system("say 'Awesome, let's take a photo.")
                 os.system("say 'The key to success is great props, take a prop from the basket.'")
                 time.sleep(7.0)
                 os.system("say 'Are you ready?'")
@@ -190,7 +194,7 @@ class FaceDetection():
                 wantPhoto = True
             else:
                 rospy.loginfo(str(i))
-                os.system("say 'The key is to press enter.")
+                os.system("say 'Why don't you want to take a picture? The key was to take a photo. Maybe I will find you next time.")
                 play_sound('sounds/played.wav')
                 wantPhoto = False
 
