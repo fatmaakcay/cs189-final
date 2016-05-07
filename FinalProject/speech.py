@@ -15,15 +15,22 @@ try:
             # recognize speech using Google Speech Recognition
             value = r.recognize_google(audio)
 
-            print value
+            if value == "yes" or value == "sure" or value == "yay":
+                print "Great will take a picture of you!"
+            elif value == "no" or value == "nope":
+                print "Okay, next time then!"
 
-            # we need some special handling here to correctly print unicode characters to standard output
-            if str is bytes: # this version of Python uses bytes for strings (Python 2)
-                print(u"You said {}".format(value).encode("utf-8"))
-            else: # this version of Python uses unicode for strings (Python 3+)
-                print("You said {}".format(value))
+            print "You said " + str(value)
+
+            # # we need some special handling here to correctly print unicode characters to standard output
+            # if str is bytes: # this version of Python uses bytes for strings (Python 2)
+            #     print(u"You said {}".format(value).encode("utf-8"))
+            # else: # this version of Python uses unicode for strings (Python 3+)
+            #     print("You said {}".format(value))
+
         except sr.UnknownValueError:
             print("Oops! Didn't catch that")
+
         except sr.RequestError as e:
             print("Uh oh! Couldn't request results from Google Speech Recognition service; {0}".format(e))
 except KeyboardInterrupt:
