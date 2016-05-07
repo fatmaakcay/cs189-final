@@ -170,6 +170,7 @@ class FaceDetection():
         global tookPicture, wantPhoto, introduced, faceDetected, count_down, g_img
 
         if faceDetected and introduced and wantPhoto and not tookPicture:
+            take_three = False
             # take_three = bool(random.getrandbits(1))
 
             # if take_three:
