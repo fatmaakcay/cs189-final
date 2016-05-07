@@ -167,54 +167,56 @@ class FaceDetection():
             introduce_yourself = True
             rospy.loginfo("should set introduce_yourself to True")
 
-    def takePicture(self, image):
-        take_three = False
-        # take_three = bool(random.getrandbits(1))
+    def takePicture(self):
+        global g_img
+        take_three = bool(random.getrandbits(1))
 
-        # if take_three:
-        #     rospy.loginfo("gonna take 3 pics")
-        #     for x in xrange(count_down):
-        #         if x == 2:
-        #             cv2.imwrite("image" + str(x+1) + ".png", l_img)
-        #             play_sound('sounds/camera_shutter.wav')
-        #             post_twitter(take_three)
-        #             rospy.loginfo("Image posted to twitter")
-        #             os.system("say " + random.choice(phrases))
-        #             os.system("say " + random.choice(promotion))
-        #             tookPicture = True
-        #         else:
-        #             l_img = g_img
-        #             x_offset=120
-        #             y_offset=175
+        if take_three:
+            rospy.loginfo("gonna take 3 pics")
 
-        #             # import in the harvard logo
-        #             s_img = cv2.imread("SEASLogo1.png", -1)
+            for x in xrange(count_down):
+                l_img = g_img
+                if x == 2:
+                    cv2.imwrite("image" + str(x+1) + ".png", l_img)
+                    play_sound('sounds/camera_shutter.wav')
+                    post_twitter(take_three)
+                    rospy.loginfo("Image posted to twitter")
+                    os.system("say " + random.choice(phrases))
+                    os.system("say " + random.choice(promotion))
+                    time.sleep(10.0)
+                else:
+                    x_offset=120
+                    y_offset=175
 
-        #             for c in range(0,3):
-        #                 l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] = s_img[:,:,c] * (s_img[:,:,3]/255.0) +  l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] * (1.0 - s_img[:,:,3]/255.0)
+                    # import in the harvard logo
+                    s_img = cv2.imread("SEASLogo1.png", -1)
+
+                    for c in range(0,3):
+                        l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] = s_img[:,:,c] * (s_img[:,:,3]/255.0) +  l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] * (1.0 - s_img[:,:,3]/255.0)
                     
-        #             cv2.imwrite("image" + str(x+1) + ".png", l_img)
-        #             play_sound('sounds/camera_shutter.wav')
-        #             play_sound('sounds/anotherone.wav')
-        #             # time.sleep(2.0)
-        # else:
-        l_img = g_img
-        x_offset=120
-        y_offset=175
+                    cv2.imwrite("image" + str(x+1) + ".png", l_img)
+                    play_sound('sounds/camera_shutter.wav')
+                    play_sound('sounds/anotherone.wav')
+                    time.sleep(3.0)
+        else:
+            l_img = g_img
+            x_offset=120
+            y_offset=175
 
-        # import in the harvard logo
-        s_img = cv2.imread("SEASLogo1.png", -1)
+            # import in the harvard logo
+            s_img = cv2.imread("SEASLogo1.png", -1)
 
-        for c in range(0,3):
-            l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] = s_img[:,:,c] * (s_img[:,:,3]/255.0) +  l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] * (1.0 - s_img[:,:,3]/255.0)
+            for c in range(0,3):
+                l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] = s_img[:,:,c] * (s_img[:,:,3]/255.0) +  l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1], c] * (1.0 - s_img[:,:,3]/255.0)
 
-        cv2.imwrite("new_photo.png", l_img)
-        play_sound('sounds/camera_shutter.wav')
-        post_twitter(take_three)
-        rospy.loginfo("Image posted to twitter")
+            cv2.imwrite("image1.png", l_img)
+            play_sound('sounds/camera_shutter.wav')
+            post_twitter(take_three)
+            rospy.loginfo("Image posted to twitter")
 
-        os.system("say " + random.choice(phrases))
-        os.system("say " + random.choice(promotion))
+            os.system("say " + random.choice(phrases))
+            os.system("say " + random.choice(promotion))
+            time.sleep(10.0)
 
         return True
 
@@ -335,7 +337,7 @@ class FaceDetection():
 
                     if wantPhoto:
                         rospy.loginfo("taking photo in if face detected")
-                        tookPicture = self.takePicture(g_img)
+                        tookPicture = self.takePicture()
 
                         if tookPicture:
                             os.system("say 'The key to success is to take photos of more people, bye.'")
