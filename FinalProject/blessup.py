@@ -104,11 +104,11 @@ class FaceDetection():
         else:
             faceDetected = False
 
-        for (x, y, w, h) in faces:
-            cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        # for (x, y, w, h) in faces:
+        #     cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
-        cv2.imshow('Video',image)
-        cv2.waitKey(5)
+        # cv2.imshow('Video',image)
+        # cv2.waitKey(5)
 
 
     def waitforInput(self, timeout):
@@ -325,15 +325,13 @@ class FaceDetection():
                     wantPhoto, introduced = self.introduceMyself()
 
                     if not wantPhoto and introduced:
-                        move_on = True
-
-                        if move_on:
-                            os.system("say 'The key to success is to find people to take photos of.'")
-                            for x in xrange(0,30): 
-                                rospy.loginfo("moving on")
-                                move_cmd.angular.z = math.radians(0)
-                                self.cmd_vel.publish(move_cmd) 
-                                r.sleep()
+                        # move on to another place
+                        os.system("say 'The key to success is to find people to take photos of.'")
+                        for x in xrange(0,30): 
+                            rospy.loginfo("moving on")
+                            move_cmd.angular.z = math.radians(0)
+                            self.cmd_vel.publish(move_cmd) 
+                            r.sleep()
 
                     if wantPhoto:
                         rospy.loginfo("taking photo in if face detected")
@@ -355,23 +353,23 @@ class FaceDetection():
 
             elif obstacle:
                 rospy.loginfo("obstacle")
-                # while obstacle: 
-                #     move_cmd.linear.x = 0
-                #     if not left_obstacle:
-                #         turn_left.angular.z = math.radians(45) 
-                #         self.cmd_vel.publish(turn_left)
-                #         rospy.loginfo("obstacle, turn left")
-                #         r.sleep()
-                #     elif not right_obstacle:
-                #         turn_left.angular.z = -math.radians(45)
-                #         self.cmd_vel.publish(turn_left)
-                #         rospy.loginfo("obstacle, turn right")
-                #         r.sleep()
-                #     else:
-                #         turn_left.angular.z = math.radians(45)
-                #         self.cmd_vel.publish(turn_left)
-                #         rospy.loginfo("detected on both sides")
-                #         r.sleep()     
+                while obstacle: 
+                    move_cmd.linear.x = 0
+                    if not left_obstacle:
+                        turn_left.angular.z = math.radians(45) 
+                        self.cmd_vel.publish(turn_left)
+                        rospy.loginfo("obstacle, turn left")
+                        r.sleep()
+                    elif not right_obstacle:
+                        turn_left.angular.z = -math.radians(45)
+                        self.cmd_vel.publish(turn_left)
+                        rospy.loginfo("obstacle, turn right")
+                        r.sleep()
+                    else:
+                        turn_left.angular.z = math.radians(45)
+                        self.cmd_vel.publish(turn_left)
+                        rospy.loginfo("detected on both sides")
+                        r.sleep()     
             else: 
             	# navigate the room normally otherwise
                 rospy.loginfo("moving forward bc no obstacle")
