@@ -33,8 +33,8 @@ from twitter_win import post_twitter
 
 import speech_recognition as sr
 
-# lin_speed = 0.15 #m/s
-lin_speed = 0
+lin_speed = 0.15 #m/s
+# lin_speed = 0
 ROT_SPEED = math.radians(45)
 turn_d = 1
 bump = False
@@ -174,23 +174,23 @@ class FaceDetection():
 
         if not introduced:
             introduced = True
-            os.system("say 'Hey! I am PhotoBot. Do you want a photo?'")
-            time.sleep(10.0)
+            os.system("say 'Hey! I am PhotoBot. You are stunning. Do you want a photo?'")
+            time.sleep(5.0)
             
-            timeout = 10.0
+            # timeout = 10.0
 
             # i = self.waitforInput(timeout)
             i = self.waitForVoice()
 
             if i:
                 rospy.loginfo(str(i))
-                os.system("say ''")
+                # os.system("say ''")
                 os.system("say 'Awesome, let's take a photo.")
                 os.system("say 'The key to success is great props, take a prop from the basket.'")
-                time.sleep(7.0)
-                os.system("say 'Are you ready?'")
-                os.system("say 'three, two, one, bless up'")
                 time.sleep(5.0)
+                os.system("say 'Are you ready? Make a huge smile'")
+                os.system("say 'three, two, one, bless up'")
+                time.sleep(3.0)
                 wantPhoto = True
             else:
                 rospy.loginfo(str(i))
@@ -230,7 +230,7 @@ class FaceDetection():
                     rospy.loginfo("Image posted to twitter")
                     os.system("say " + random.choice(phrases))
                     os.system("say " + random.choice(promotion))
-                    time.sleep(10.0)
+                    time.sleep(5.0)
                 else:
                     x_offset=120
                     y_offset=175
@@ -263,7 +263,7 @@ class FaceDetection():
 
             os.system("say " + random.choice(phrases))
             os.system("say " + random.choice(promotion))
-            time.sleep(10.0)
+            time.sleep(5.0)
 
         return True
 
