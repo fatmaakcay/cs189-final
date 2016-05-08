@@ -190,7 +190,7 @@ class FaceDetection():
                 time.sleep(7.0)
                 os.system("say 'Are you ready? Make a huge smile'")
                 os.system("say 'three, two, one, bless up'")
-                time.sleep(5.0)
+                time.sleep(7.0)
                 wantPhoto = True
             else:
                 rospy.loginfo(str(i))
@@ -230,7 +230,7 @@ class FaceDetection():
                     rospy.loginfo("Image posted to twitter")
                     os.system("say " + random.choice(phrases))
                     os.system("say " + random.choice(promotion))
-                    time.sleep(5.0)
+                    time.sleep(10.0)
                 else:
                     x_offset=120
                     y_offset=175
