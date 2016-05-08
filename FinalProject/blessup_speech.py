@@ -175,7 +175,7 @@ class FaceDetection():
         if not introduced:
             introduced = True
             os.system("say 'Hey! I am PhotoBot. You are stunning. Do you want a photo?'")
-            time.sleep(5.0)
+            time.sleep(4.0)
             
             # timeout = 10.0
 
@@ -187,10 +187,10 @@ class FaceDetection():
                 # os.system("say ''")
                 os.system("say 'Awesome, let's take a photo.")
                 os.system("say 'The key to success is great props, take a prop from the basket.'")
-                time.sleep(5.0)
+                time.sleep(7.0)
                 os.system("say 'Are you ready? Make a huge smile'")
                 os.system("say 'three, two, one, bless up'")
-                time.sleep(3.0)
+                time.sleep(5.0)
                 wantPhoto = True
             else:
                 rospy.loginfo(str(i))
